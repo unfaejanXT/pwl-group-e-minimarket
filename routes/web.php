@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['middleware' => ['role:owner']],function (){
+    //
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
