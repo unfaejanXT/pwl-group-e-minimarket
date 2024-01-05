@@ -71,9 +71,6 @@ class RegisteredUserController extends Controller
             $user->assignRole('Kasir');
         } elseif ($request->jabatan == 'Gudang') {
             $user->assignRole('Gudang');
-        } else {
-            // Default role jika jabatan tidak sesuai dengan yang diharapkan
-            $user->assignRole('default_role');
         }
 
         event(new Registered($user));
