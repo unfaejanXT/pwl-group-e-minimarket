@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
+use App\Models\Employee;
+use App\Models\Role;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -10,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -20,7 +24,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $roles = Role::pluck('name', 'name');
+        $branches = Branch::pluck('nama', 'id');
+        return view('auth.register', compact('roles','branches'));
     }
 
     /**
@@ -34,6 +40,8 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'jabatan' => ['required', Rule::in(['Owner', 'Manager', 'Supervisor', 'Kasir', 'Gudang'])],
+            'branch_id' => ['required', 'exists:branches,id'], // Validasi cabang yang dipilih
         ]);
 
         $user = User::create([
@@ -42,7 +50,31 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole('owner');
+        $employee = Employee::create([
+            'user_id' => $user->id,
+            'jabatan' => $request->jabatan,
+        ]);
+
+          // Associate selected branch
+        $branch = Branch::find($request->branch_id);
+        $employee->cabang()->associate($branch);
+        $employee->save();
+
+        // Set roles based on jabatan
+        if ($request->jabatan == 'Owner') {
+            $user->assignRole('Owner');
+        } elseif ($request->jabatan == 'Manager') {
+            $user->assignRole('Manager');
+        } elseif ($request->jabatan == 'Supervisor') {
+            $user->assignRole('Supervisor');
+        } elseif ($request->jabatan == 'Kasir') {
+            $user->assignRole('Kasir');
+        } elseif ($request->jabatan == 'Gudang') {
+            $user->assignRole('Gudang');
+        } else {
+            // Default role jika jabatan tidak sesuai dengan yang diharapkan
+            $user->assignRole('default_role');
+        }
 
         event(new Registered($user));
 
@@ -50,4 +82,7 @@ class RegisteredUserController extends Controller
 
         return redirect(RouteServiceProvider::HOME);
     }
+
+
+
 }
