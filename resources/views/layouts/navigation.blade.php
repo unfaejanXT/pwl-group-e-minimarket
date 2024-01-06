@@ -8,7 +8,9 @@
                     <a href="{{ route('dashboard') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
+                    <span class="ml-4 text-xl font-bold text-gray-800">JAYUSMAN MART</span>
                 </div>
+
                 {{--
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
