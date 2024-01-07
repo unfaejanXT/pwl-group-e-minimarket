@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="py-2">
         <div class=" mx-auto sm:px-6 lg:px-8">
-            <h2 class="py-3 text-3xl font-bold">DATA CABANG</h2>
+            <h2 class="py-3 text-3xl font-bold">DATA BARANG</h2>
             <div class=" overflowhidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900">
                     <br /><br />
@@ -10,7 +10,7 @@
                             <div class="p-1.5 min-w-full inline-block align-middle">
 
                                 <div class="py-3 ">
-                                    <x-primary-button tag="a" href="#">Tambah Cabang Baru</x-primary-button>
+                                    <x-primary-button tag="a" href="#">Tambah Barang</x-primary-button>
                                 </div>
 
                                 <div class="border rounded-lg overflow-hidden border-gray-700">

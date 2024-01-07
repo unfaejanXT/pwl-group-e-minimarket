@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,10 +23,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', function () {
+Route::get('/cabang', function () {
+    return view('branch.index');
+});
+
+
+Route::get('/produk', function () {
     return view('product.index');
 });
 
+Route::get('/pegawai', [EmployeeController::class, 'index'])->name('employee.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
